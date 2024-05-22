@@ -48,12 +48,21 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun observe() {
+        //OBSERVANDO SE DEU SUCESSO OU FALHA NA VIEW MODEL
         viewModel.login.observe(this) {
             if (it.status()) {
                 startActivity(Intent(applicationContext, MainActivity::class.java))
                 finish()
             } else {
                 Toast.makeText(applicationContext, it.message(), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        //VERIFICA SE O USUARIO JA ESTA LOGADO
+        viewModel.loggedUser.observe(this) {
+            if (it) {
+                startActivity(Intent(applicationContext, MainActivity::class.java))
+                finish()
             }
         }
 
@@ -84,9 +93,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun handleLogin() {
+        //PASSANDO AS INFORMACOES DE LOGIN
         val email = binding.editEmail.text.toString()
         val password = binding.editPassword.text.toString()
 
+        //CHAMANDO A VIEW MODEL
         viewModel.doLogin(email, password)
     }
 }
